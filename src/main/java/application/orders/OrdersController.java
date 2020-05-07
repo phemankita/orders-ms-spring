@@ -25,8 +25,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import application.orders.models.Order;
 import application.orders.models.OrdersRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
+@Api(value="Orders API")
+@RequestMapping("/")
 public class OrdersController {
 	
 	private static Logger logger =  LoggerFactory.getLogger(OrdersController.class);
@@ -35,16 +39,9 @@ public class OrdersController {
     private OrdersRepository ordersRepo;
     
     /**
-     * check
+     * @return get all orders
      */
-    @RequestMapping("/check")
-    protected @ResponseBody String check() {
-        return "it works!";
-    }
-    
-    /**
-     * @return customer by username
-     */
+    @ApiOperation(value = "View the list of orders")
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     protected @ResponseBody ResponseEntity<?> getOrders() {
         try {
@@ -85,8 +82,9 @@ public class OrdersController {
     }
 
     /**
-     * @return customer by id
+     * @return get orders by id
      */
+    @ApiOperation(value = "View the list of orders by order id")
     @RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
     protected ResponseEntity<?> getById(@RequestHeader Map<String, String> headers, @PathVariable long id) {
 		final String customerId = getCustomerId();
@@ -110,6 +108,7 @@ public class OrdersController {
      * Add order
      * @return transaction status
      */
+    @ApiOperation(value = "Place orders")
     @RequestMapping(value = "/orders", method = RequestMethod.POST, consumes = "application/json")
     protected ResponseEntity<?> create(@RequestBody Order payload) {
         try {
