@@ -1,7 +1,6 @@
 package application.orders.models;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
