@@ -12,7 +12,7 @@
  * and limitations under the License.
  */
 
-package application;
+package application.orders;
 
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
