@@ -137,10 +137,16 @@ cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 256 | head -n 1 |
 
 Note that if the [Authorization Server](https://github.com/ibm-garage-ref-storefront/auth-ms-spring) is also deployed, it must use the same HS256 shared secret.
 
+- To run the test cases for the orders application, run the below command.
+
+```
+appsody test --docker-options "-e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=3306 -e MYSQL_DATABASE=ordersdb -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=password -e HS256_KEY=<Paste HS256 key here>"
+
+
 - To run the orders application, run the below command.
 
 ```
-appsody run --docker-options "-e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=3306 -e MYSQL_DATABASE=ordersdb -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=password -e HS256_KEY=<Paste HS256 key here>""
+appsody run --docker-options "-e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=3306 -e MYSQL_DATABASE=ordersdb -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=password -e HS256_KEY=<Paste HS256 key here>"
 ```
 
 - If it is successfully running, you will see something like below.

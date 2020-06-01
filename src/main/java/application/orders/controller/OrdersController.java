@@ -1,4 +1,4 @@
-package application.orders;
+package application.orders.controller;
 
 import java.net.URI;
 import java.util.Calendar;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import application.orders.models.Order;
-import application.orders.models.OrdersRepository;
+import application.orders.repository.OrdersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
