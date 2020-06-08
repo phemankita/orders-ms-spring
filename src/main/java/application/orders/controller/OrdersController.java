@@ -1,6 +1,8 @@
 package application.orders.controller;
 
+import java.beans.Encoder;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +24,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpMethod;
+import application.orders.config.MFConfig;
 
 import application.orders.models.Order;
 import application.orders.repository.OrdersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.boot.json.*;
 
 @RestController
 @Api(value="Orders API")
@@ -34,7 +44,10 @@ import io.swagger.annotations.ApiOperation;
 public class OrdersController {
 	
 	private static Logger logger =  LoggerFactory.getLogger(OrdersController.class);
-    
+	
+	@Autowired
+    private MFConfig mfConfig;
+
     @Autowired
     private OrdersRepository ordersRepo;
     
@@ -150,7 +163,46 @@ public class OrdersController {
     	
         logger.debug("to do: " + order);
 
-        //Implement shipment service
-    }
+		//Implement shipment service
+
+		//notify customer about order status over mobile
+		if ( Boolean.parseBoolean(order.getNotifyMobile()) ) {
+			notifyOverMobile(order);
+		}
+		
+	}
+	
+	private void notifyOverMobile(Order order) {
+		//send Mobile Push Notification that Order has been dispatched for Shippment
+		String mfTokenEndpointUrl = mfConfig.getAuthUrl();
+		String mfPushUrl = mfConfig.getPushUrl();
+
+		if ( mfTokenEndpointUrl != null && !mfTokenEndpointUrl.isEmpty() &&
+				mfPushUrl != null && !mfPushUrl.isEmpty()) {
+		
+			RestTemplate restTemplate = new RestTemplate(); 
+			HttpHeaders httpHeaders = new HttpHeaders();
+			httpHeaders.setBasicAuth(mfConfig.getClientId(), mfConfig.getSecret());
+			httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+			//TODO: use the above variables and get a encoded query params format.  For now hardcoding...
+			String httpBody = "grant_type=client_credentials&scope=messages.write%20push.application." + mfConfig.getAppId();
+
+			HttpEntity<String> request  = new HttpEntity(httpBody, httpHeaders);
+			ResponseEntity<String> result = restTemplate.exchange(mfTokenEndpointUrl, HttpMethod.POST, request, String.class, new java.util.HashMap());
+
+			JsonParser jsonParser = JsonParserFactory.getJsonParser();
+			Map<String,Object> resultJson = jsonParser.parseMap(result.getBody());
+
+			httpHeaders = new HttpHeaders();
+			httpHeaders.setBearerAuth((String)resultJson.get("access_token"));
+			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+			String notificationMsg = "Your Oder " + order.getId() + " has left the stores for shipment";
+			httpBody = "{\"message\": { \"alert\":" + "\"" + notificationMsg + "\"" + "}, \"target\": {\"userIds\":[" + "\"" + order.getCustomerId() + "\"" + "]}}";
+			request  = new HttpEntity(httpBody, httpHeaders);
+			result = restTemplate.exchange(mfPushUrl, HttpMethod.POST, request, String.class, new java.util.HashMap());
+		}
+	}
 
 }
