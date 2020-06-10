@@ -41,6 +41,10 @@ public class Order {
 	@Basic
 	@Column(name = "count")
 	int count;
+
+	@Basic
+	@Column(name = "notifyMobile")
+	String notifyMobile = "false";
 	
 	public Order() {
 		super();
@@ -50,34 +54,50 @@ public class Order {
 	public String getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
-	
+
 	public Date getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+
+	public void setDate(final Date date) {
 		this.date = date;
 	}
+
 	public int getItemId() {
 		return itemId;
 	}
-	public void setItemId(int itemId) {
+
+	public void setItemId(final int itemId) {
 		this.itemId = itemId;
 	}
+
 	public String getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(String customer_id) {
+
+	public void setCustomerId(final String customer_id) {
 		this.customerId = customer_id;
 	}
+
 	public int getCount() {
 		return count;
 	}
-	public void setCount(int count) {
+
+	public void setCount(final int count) {
 		this.count = count;
 	}
+
+	public String getNotifyMobile() {
+		return notifyMobile;
+	}
+
+	public void setNotifyMobile(final String notifyMobile) {
+		this.notifyMobile = notifyMobile;
+	}
+
 	@Override
 	public String toString() {
 		return "{id = " + id + ", itemId=" + itemId + ", date=" + date.toString() + ", customerId=" + customerId
