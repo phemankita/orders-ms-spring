@@ -141,7 +141,7 @@ Note that if the [Authorization Server](https://github.com/ibm-garage-ref-storef
 
 ```
 appsody test --docker-options "-e MYSQL_HOST=host.docker.internal -e MYSQL_PORT=3306 -e MYSQL_DATABASE=ordersdb -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=password -e HS256_KEY=<Paste HS256 key here>"
-
+```
 
 - To run the orders application, run the below command.
 
@@ -259,6 +259,49 @@ $ curl -H "Authorization: Bearer ${jwt}" "http://localhost:8080/micro/orders"
 - Also you can access the swagger ui at http://localhost:8080/micro/swagger-ui.html
 
 ![Orders Swagger UI](static/swagger_orders.png?raw=true)
+
+- We also enabled sonarqube as part of the application.
+
+To run the sonarqube as a docker container, run the below command.
+
+```
+docker run -d --name sonarqube -p 9000:9000 sonarqube
+```
+
+To test the application, run the below command.
+
+```
+./mvnw sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
+```
+
+Now, access `http://localhost:9000/`, login using the credentials `admin/admin`, and then you will see something like below.
+
+![Orders SonarQube](static/orders_sonarqube.png?raw=true)
+
+- We included contract testing as part of our application too.
+
+To run Pact as a docker container, run the below command.
+
+```
+cd pact_docker/
+docker-compose up -d
+```
+
+To publish the pacts to pacts broker, run the below command.
+
+```
+./mvnw clean install pact:publish -Dpact.broker.url=http://localhost:8500 -Ppact-consumer
+```
+
+To verify the results, run the below command.
+
+```
+ ./mvnw test -Dpact.verifier.publishResults='true' -Dpactbroker.host=localhost -Dpactbroker.port=8500 -Ppact-producer
+```
+
+Now you can access the pact broker to see if the tests are successful at http://localhost:8500/.
+
+![Orders Pact Broker](static/orders_pactbroker.png?raw=true)
 
 ### Exiting the application
 
