@@ -1,8 +1,6 @@
 package application.orders.controller;
 
-import java.beans.Encoder;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -28,11 +27,12 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpMethod;
-import application.orders.config.MFConfig;
 
+import application.orders.config.MFConfig;
+import application.orders.models.About;
 import application.orders.models.Order;
+import application.orders.repository.AboutService;
 import application.orders.repository.OrdersRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,6 +50,19 @@ public class OrdersController {
 
     @Autowired
     private OrdersRepository ordersRepo;
+    
+    @Autowired
+    private AboutService aboutService;
+    
+    /**
+	 * @return about orders
+	 */
+	@ApiOperation(value = "About Orders")
+	@GetMapping(path = "/about", produces = "application/json")
+	@ResponseBody 
+	public About aboutOrders() {
+		return aboutService.getInfo();
+	}
     
     /**
      * @return get all orders
