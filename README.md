@@ -3,7 +3,7 @@
 # Microservice Apps Integration with MariaDB Database and enabling OAuth protection for APIs
 
 *This project is part of the 'IBM Cloud Native Reference Architecture' suite, available at
-https://github.com/ibm-garage-ref-storefront/refarch-cloudnative-storefront*
+https://cloudnativereference.dev/*
 
 ## Table of Contents
 
