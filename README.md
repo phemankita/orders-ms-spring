@@ -323,4 +323,4 @@ Closing down development environment.
 
 You have successfully deployed and tested the Orders Microservice and a MariaDB database in local Docker Containers using Appsody.
 
-To see the Orders application working in a more complex microservices use case, checkout our Microservice Reference Architecture Application [here](https://github.com/ibm-garage-ref-storefront/refarch-cloudnative-storefront).
+To see the Orders application working in a more complex microservices use case, checkout our Microservice Reference Architecture Application [here](https://github.com/ibm-garage-ref-storefront/docs).
